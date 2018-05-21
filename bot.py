@@ -1,5 +1,6 @@
 import random
-
+import discord
+from discord import Game
 from discord.ext.commands import Bot
 
 BOT_PREFIX = "!"
@@ -156,6 +157,7 @@ This is made by Haru and Shiro''')
 
 @bot.event
 async def on_ready():
+    await bot.change_presence(game = Game(name = "Trying fix Gumi's code"))
     print('RayBot is online')
     print('Logged in as')
     print(bot.user.name)
