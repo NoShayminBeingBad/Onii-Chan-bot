@@ -157,7 +157,7 @@ This is made by Haru and Shiro''')
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(game = Game(name = "Trying fix Gumi's code"))
+    await bot.change_presence(game = Game(name = "with Gumi's code"))
     print('RayBot is online')
     print('Logged in as')
     print(bot.user.name)
