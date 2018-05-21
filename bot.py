@@ -76,10 +76,10 @@ def update_member():
                     value = 1
                     rol = ''
                     num += 1
-new = ''
+'''new = ''
 for i in TOKEN:
     new += chr(ord(i)-3)
-TOKEN = new
+TOKEN = new'''
 
 def return_member(num):
     i = int(num)
@@ -167,4 +167,4 @@ async def on_ready():
     update_member()
 
               
-bot.run(TOKEN)
+bot.run(BOT_TOKEN)
