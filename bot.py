@@ -76,10 +76,10 @@ def update_member():
                     value = 1
                     rol = ''
                     num += 1
-'''new = ''
+new = ''
 for i in TOKEN:
     new += chr(ord(i)-3)
-TOKEN = new'''
+TOKEN = new
 
 def return_member(num):
     i = int(num)
