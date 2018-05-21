@@ -109,6 +109,9 @@ async def on_message(message):
         msg = '( ͡° ͜ʖ ͡°)'.format(message)
         await bot.send_message(message.channel, msg)
     elif message.content.startswith('?'):
+        if message.content[1:] == 'talk to yourself':
+            await bot.send_message(message.channel, "Haha, nice try. That's not going to happen again!".format(message))
+            return
         NAME = message.content[1:]
         if NAME.lower() == 'guild master' or NAME.lower() == 'gm':
             await bot.send_message(message.channel, return_member(0).format(message))
@@ -144,11 +147,6 @@ async def cheese(context, *, cheese_type):
         await bot.say(context.message.author.mention + " More like Savia UBB + Hit count SBB + Atk based on Def conversion buff + Brute Potions")
     else:
         await bot.say(context.message.author.mention + " Never hear of it, maybe " + cheese_type + " makes good fondue")
-
-@bot.command(name = 'talk to yourself'
-            aliases = ['talk to yourself', 'ttys'])
-async def talk_to_yourself(*, message):
-    await bot.say('''Haha, nice try. That's not going to happen again!''')
 
 @bot.command(pass_context = True)
 async def Graid(context,*,tip):
