@@ -86,10 +86,10 @@ def return_member(num):
     msg = 'Name: ' + Member[i].name + chr(10) + 'Discord: ' + Member[i].tag + chr(10) + 'Role: ' + Member[i].role + chr(10) + 'Friend ID: ' + Member[i].code
     return msg
 
-def return_officer(num):
+def return_officer():
     off = ''
     for i in Member:
-        if i.role == 'Officer:
+        if i.role == 'Officer':
             off += 'Name: ' + i.name + chr(10)
     return off
 
@@ -109,18 +109,18 @@ async def on_message(message):
         await bot.send_message(message.channel, msg)
     elif message.content.startswith('?'):
         NAME = message.content[1:]
-        if NAME.lower() == 'guild master' or 'gm':
+        if NAME.lower() == 'guild master' or NAME.lower() == 'gm':
             await bot.send_message(message.channel, return_member(0).format(message))
-        elif NAME.lower() == 'vice guild master' or 'vgm':
+        elif NAME.lower() == 'vice guild master' or NAME.lower() == 'vgm':
             await bot.send_message(message.channel, return_member(1).format(message))
         elif NAME.lower() == 'officer':
-            msg = 'Your officers are:' + chr(10) + return_officer(i).format(message))
-            await bot.send_message(
+            msg = 'Your officers are:' + chr(10) + return_officer().format(message)
+            await bot.send_message(message.channel, msg)
         for i in range(len(Member)):
             if Member[i].name.lower() == NAME.lower():
                 await bot.send_message(message.channel, return_member(i).format(message))
                 break
-            elif Member[i].discord.lower()[1:] == NAME.lower():
+            elif Member[i].tag.lower()[1:] == NAME.lower():
                 await bot.send_message(message.channel, return_member(i).format(message))
     elif message.content == 'print':
         msg = '@raymond1432'.format(message)
