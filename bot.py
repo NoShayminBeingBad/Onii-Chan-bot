@@ -154,16 +154,18 @@ async def Graid(context,*,tip):
     if tip == 'tier':
         await bot.say(context.message.author.mention + '''https://docs.google.com/spreadsheets/d/1oXacoQxFZut_JsOXVfYm6wNz6S7LXXgkrUk3U9DR7qU/edit?usp=sharing
 This is made by Haru and Shiro''')
+        
+@bot.command()
+async def update():
+    text_id = await bot.get_message(bot.get_channel('437032712327397378'), '437254655828033556')
+    global text
+    text = ''.join(c for c in text_id.content if c <= '\uFFFF')
+    update_member()
 
 @bot.event
 async def on_ready():
     await bot.change_presence(game = Game(name = "with Gumi's code"))
-    print('RayBot is online')
-    print('Logged in as')
-    print(bot.user.name)
-    print(bot.user.id)
-    print('------')
-    text_id = await bot.get_message(bot.get_channel('445751409732878337'), '447551398482018305')
+    text_id = await bot.get_message(bot.get_channel('437032712327397378'), '437254655828033556')
     global text
     text = ''.join(c for c in text_id.content if c <= '\uFFFF')
     update_member()
