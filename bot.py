@@ -111,24 +111,21 @@ async def on_message(message):
     elif message.content.startswith('?'):
         if message.content[1:] == 'talk to yourself':
             await bot.send_message(message.channel, "Haha, nice try. That's not going to happen again!".format(message))
-            return
-        NAME = message.content[1:]
-        if NAME.lower() == 'guild master' or NAME.lower() == 'gm':
-            await bot.send_message(message.channel, return_member(0).format(message))
-        elif NAME.lower() == 'vice guild master' or NAME.lower() == 'vgm':
-            await bot.send_message(message.channel, return_member(1).format(message))
-        elif NAME.lower() == 'officer':
-            msg = 'Your officers are:' + chr(10) + return_officer().format(message)
-            await bot.send_message(message.channel, msg)
-        for i in range(len(Member)):
-            if Member[i].name.lower() == NAME.lower():
-                await bot.send_message(message.channel, return_member(i).format(message))
-                break
-            elif Member[i].tag.lower()[1:] == NAME.lower():
-                await bot.send_message(message.channel, return_member(i).format(message))
-    elif message.content == 'print':
-        msg = '@raymond1432'.format(message)
-        await bot.send_message(message.channel, msg)
+        else:
+            NAME = message.content[1:]
+            if NAME.lower() == 'guild master' or NAME.lower() == 'gm':
+                await bot.send_message(message.channel, return_member(0).format(message))
+            elif NAME.lower() == 'vice guild master' or NAME.lower() == 'vgm':
+                await bot.send_message(message.channel, return_member(1).format(message))
+            elif NAME.lower() == 'officer':
+                msg = 'Your officers are:' + chr(10) + return_officer().format(message)
+                await bot.send_message(message.channel, msg)
+            for i in range(len(Member)):
+                if Member[i].name.lower() == NAME.lower():
+                    await bot.send_message(message.channel, return_member(i).format(message))
+                    break
+                elif Member[i].tag.lower()[1:] == NAME.lower():
+                    await bot.send_message(message.channel, return_member(i).format(message))
         
     await bot.process_commands(message)
 
