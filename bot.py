@@ -76,12 +76,23 @@ def update_member():
                     value = 1
                     rol = ''
                     num += 1
+new = ''
+for i in TOKEN:
+    new += chr(ord(i)-3)
+TOKEN = new
 
 def return_member(num):
     i = int(num)
     msg = 'Name: ' + Member[i].name + chr(10) + 'Discord: ' + Member[i].tag + chr(10) + 'Role: ' + Member[i].role + chr(10) + 'Friend ID: ' + Member[i].code
     return msg
-    
+
+def return_officer(num):
+    off = ''
+    for i in Member:
+        if i.role == 'Officer:
+            off += 'Name: ' + i.name + chr(10)
+    return off
+
 @bot.event
 async def on_message(message):
 
@@ -98,10 +109,19 @@ async def on_message(message):
         await bot.send_message(message.channel, msg)
     elif message.content.startswith('?'):
         NAME = message.content[1:]
+        if NAME.lower() == 'guild master' or 'gm':
+            await bot.send_message(message.channel, return_member(0).format(message))
+        elif NAME.lower() == 'vice guild master' or 'vgm':
+            await bot.send_message(message.channel, return_member(1).format(message))
+        elif NAME.lower() == 'officer':
+            msg = 'Your officers are:' + chr(10) + return_officer(i).format(message))
+            await bot.send_message(
         for i in range(len(Member)):
-            if Member[i].name.lower() == NAME:
+            if Member[i].name.lower() == NAME.lower():
                 await bot.send_message(message.channel, return_member(i).format(message))
                 break
+            elif Member[i].discord.lower()[1:] == NAME.lower():
+                await bot.send_message(message.channel, return_member(i).format(message))
     elif message.content == 'print':
         msg = '@raymond1432'.format(message)
         await bot.send_message(message.channel, msg)
@@ -133,15 +153,7 @@ async def Graid(context,*,tip):
     if tip == 'tier':
         await bot.say(context.message.author.mention + '''https://docs.google.com/spreadsheets/d/1oXacoQxFZut_JsOXVfYm6wNz6S7LXXgkrUk3U9DR7qU/edit?usp=sharing
 This is made by Haru and Shiro''')
-           
-@bot.command(pass_context = True)
-async def force(context, *, num):
-    await bot.say(return_member(num))
 
-new = ''
-for i in TOKEN:
-    new += chr(ord(i)-3)
-TOKEN = new
 @bot.event
 async def on_ready():
     print('RayBot is online')
