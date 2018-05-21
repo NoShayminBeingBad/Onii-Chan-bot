@@ -3,7 +3,6 @@ import random
 from discord.ext.commands import Bot
 
 BOT_PREFIX = "!"
-TOKEN = 'NDQ1NzUyMTU0OTMwODA2ODE0.Dd0RUw.JpSXieZvokXRVKyEBxaG2TC1TQo'
 
 bot = Bot(command_prefix=BOT_PREFIX)
 
