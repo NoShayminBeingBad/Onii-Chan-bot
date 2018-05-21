@@ -167,4 +167,4 @@ async def on_ready():
     update_member()
 
               
-bot.run(BOT_TOKEN)
+bot.run(TOKEN)
