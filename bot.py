@@ -3,6 +3,7 @@ import random
 from discord.ext.commands import Bot
 
 BOT_PREFIX = "!"
+TOKEN = 'QGT4Q}X|PWX3RWPzRGD5RGH31Gg3UXz1MsV[lh]yrn[UYN|HE{dJ5WF4WTr'
 
 bot = Bot(command_prefix=BOT_PREFIX)
 
@@ -111,6 +112,10 @@ This is made by Haru and Shiro''')
 async def force(context, *, num):
     await bot.say(return_member(num))
 
+new = ''
+for i in TOKEN:
+    new += chr(ord(i)-3)
+TOKEN = new
 @bot.event
 async def on_ready():
     print('RayBot is online')
