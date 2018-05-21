@@ -18,15 +18,41 @@ class role:
     code = '00000000'
     tag = 'Black_Discord'
 
-
+def staff_update():
+    for i in range(6):
+        Member.append(role())
+    Member[0].name = 'Niko'
+    Member[0].role = 'Guild Master'
+    Member[0].code = '4520159825'
+    Member[0].tag = '@MW_147'
+    Member[1].name = 'TBD'
+    Member[1].role = 'Vice Guild Master'
+    Member[2].name = 'Haru'
+    Member[2].role = 'Officer'
+    Member[2].code = '6130975833'
+    Member[2].tag = '@Haru'
+    Member[3].name = 'Shiro'
+    Member[3].role = 'Officer'
+    Member[3].code = '28462667'
+    Member[3].tag = '@Shiro'
+    Member[4].name = 'Sureñio'
+    Member[4].role = 'Officer'
+    Member[4].code = '6870486802'
+    Member[4].tag = '@Sureñio'
+    Member[5].name = 'Raymond'
+    Member[5].role = 'Officer'
+    Member[5].code = '2381919750'
+    Member[5].tag = '@raymond1432'
+    
 def update_member():
     value = 1
-    num = 0
+    num = 6
     rol = ''
     ch = [' ']
     bracket = False
     global Member
     Member = []
+    staff_update()
     for i in range(len(text)):
         if text[i] not in ch:
             rol += text[i]
