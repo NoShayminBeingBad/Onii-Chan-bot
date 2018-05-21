@@ -157,7 +157,7 @@ This is made by Haru and Shiro''')
         
 @bot.command()
 async def update():
-    text_id = await bot.get_message(bot.get_channel('437032712327397378'), '437254655828033556')
+    text_id = await bot.get_message(bot.get_channel('445751409732878337'), '447551398482018305')
     global text
     text = ''.join(c for c in text_id.content if c <= '\uFFFF')
     update_member()
@@ -165,7 +165,7 @@ async def update():
 @bot.event
 async def on_ready():
     await bot.change_presence(game = Game(name = "with Gumi's code"))
-    text_id = await bot.get_message(bot.get_channel('437032712327397378'), '437254655828033556')
+    text_id = await bot.get_message(bot.get_channel('445751409732878337'), '447551398482018305')
     global text
     text = ''.join(c for c in text_id.content if c <= '\uFFFF')
     update_member()
