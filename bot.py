@@ -145,7 +145,8 @@ async def cheese(context, *, cheese_type):
     else:
         await bot.say(context.message.author.mention + " Never hear of it, maybe " + cheese_type + " makes good fondue")
 
-@bot.command(name = 'talk to yourself')
+@bot.command(name = 'talk to yourself'
+            aliases = ['talk to yourself', 'ttys'])
 async def talk_to_yourself(*, message):
     await bot.say('''Haha, nice try. That's not going to happen again!''')
 
