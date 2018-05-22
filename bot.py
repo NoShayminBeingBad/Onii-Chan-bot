@@ -133,7 +133,7 @@ async def on_message(message):
             description = 'Tells about a way to cheese a trial',
             brief = 'What cheese do you want on a trail? iubb, normal attack',
             pass_context = True)
-async def cheese(context, *, cheese_type):
+async def cheese(context, *, cheese_type = ''):
     normal_attack = ['normal attack',
                      'savia',
                      'normal',
@@ -142,6 +142,8 @@ async def cheese(context, *, cheese_type):
         await bot.say(context.message.author.mention + " UBB over and over again until they're are dead")
     elif cheese_type in normal_attack:
         await bot.say(context.message.author.mention + " More like Savia UBB + Hit count SBB + Atk based on Def conversion buff + Brute Potions")
+    elif cheese_type = '':
+        await bot.say(context.message.author.mention + "Please enter a type")
     else:
         await bot.say(context.message.author.mention + " Never hear of it, maybe " + cheese_type + " makes good fondue")
 
