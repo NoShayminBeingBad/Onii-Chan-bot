@@ -150,7 +150,11 @@ async def Graid(context,*,tip):
     if tip == 'tier':
         await bot.say(context.message.author.mention + '''https://docs.google.com/spreadsheets/d/1oXacoQxFZut_JsOXVfYm6wNz6S7LXXgkrUk3U9DR7qU/edit?usp=sharing
 This is made by Haru and Shiro''')
-        
+ 
+@bot.command()
+async def goldstar():
+    await bot.say('https://media.discordapp.net/attachments/340409248926400526/448308906590994433/man_file_1042548_8a8.png')
+
 @bot.command()
 async def update():
     text_id = await bot.get_message(bot.get_channel('445751409732878337'), '447551398482018305')
