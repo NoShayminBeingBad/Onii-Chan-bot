@@ -121,10 +121,10 @@ async def on_message(message):
                 msg = 'Your officers are:' + chr(10) + return_officer().format(message)
                 await bot.send_message(message.channel, msg)
             for i in range(len(Member)):
-                if Member[i].name.lower() == NAME.lower():
+                if Member[i].name.lower() in NAME.lower():
                     await bot.send_message(message.channel, return_member(i).format(message))
                     break
-                elif Member[i].tag.lower()[1:] == NAME.lower():
+                elif Member[i].tag.lower()[1:] in NAME.lower():
                     await bot.send_message(message.channel, return_member(i).format(message))
         
     await bot.process_commands(message)
