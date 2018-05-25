@@ -156,6 +156,10 @@ async def goldstar():
     await bot.say('https://media.discordapp.net/attachments/340409248926400526/448308906590994433/man_file_1042548_8a8.png')
 
 @bot.command()
+async def isopod():
+    await bot.say('https://cdn.discordapp.com/attachments/445751284214136834/449384585894297601/unknown.png')
+    
+@bot.command()
 async def update():
     text_id = await bot.get_message(bot.get_channel('445751409732878337'), '447551398482018305')
     global text
