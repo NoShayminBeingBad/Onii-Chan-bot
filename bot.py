@@ -168,7 +168,6 @@ async def update():
 
 @bot.event
 async def on_ready():
-    await bot.change_nickname(bot.user, 'RayBot')
     await bot.change_presence(game = Game(name = "with Gumi's code"))
     text_id = await bot.get_message(bot.get_channel('445751409732878337'), '447551398482018305')
     global text
