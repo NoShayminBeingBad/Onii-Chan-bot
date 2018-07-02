@@ -1,178 +1,124 @@
 import random
-
+import time
+import asyncio
+import discord
+from discord.ext import commands
 from discord import Game
-from discord.ext.commands import Bot
 
-BOT_PREFIX = "!"
-TOKEN = 'QGT4Q}X|PWX3RWPzRGD5RGH31Gg3UXz1MsV[lh]yrn[UYN|HE{dJ5WF4WTr'
+TOKEN = 'NDYzMzQ5OTAxNTg2MjAyNjI1.DhvIhQ.F6jGHGoBqfjpBO94Q2ibgvXoHHk'
+BOX_PREFIX = ['@']
 
-bot = Bot(command_prefix=BOT_PREFIX)
+if not discord.opus.is_loaded():
+    # the 'opus' library here is opus.dll on windows
+    # or libopus.so on linux in the current directory
+    # you should replace this with the location the
+    # opus library is located in and with the proper filename.
+    # note that on windows this DLL is automatically provided for you
+    discord.opus.load_opus('opus')
 
-text = ''
+class VoiceEntry:
+    def __init__(self, message, player):
+        self.requester = message.author
+        self.channel = message.channel
+        self.player = player
 
-Member = []
+    def __str__(self):
+        fmt = '*{0.title}* uploaded by {0.uploader} and requested by {1.display_name}'
+        duration = self.player.duration
+        if duration:
+            fmt = fmt + ' [length: {0[0]}m {0[1]}s]'.format(divmod(duration, 60))
+        return fmt.format(self.player, self.requester)
 
-class role:
+class VoiceState:
+    def __init__(self, bot):
+        self.current = None
+        self.voice = None
+        self.bot = bot
+        self.play_next_song = asyncio.Event()
+        self.songs = asyncio.Queue()
+        self.skip_votes = set() # a set of user_ids that voted
+        self.audio_player = self.bot.loop.create_task(self.audio_player_task())
 
-    name = 'Blank_Name'
-    role = 'Member'
-    code = '00000000'
-    tag = 'Black_Discord'
+    def is_playing(self):
+        if self.voice is None or self.current is None:
+            return False
 
-def staff_update():
-    for i in range(6):
-        Member.append(role())
-    Member[0].name = 'Niko'
-    Member[0].role = 'Guild Master'
-    Member[0].code = '4520159825'
-    Member[0].tag = '@MW_147'
-    Member[1].name = 'TBD'
-    Member[1].role = 'Vice Guild Master'
-    Member[2].name = 'Haru'
-    Member[2].role = 'Officer'
-    Member[2].code = '6130975833'
-    Member[2].tag = '@Haru'
-    Member[3].name = 'Shiro'
-    Member[3].role = 'Officer'
-    Member[3].code = '28462667'
-    Member[3].tag = '@Shiro'
-    Member[4].name = 'Sureñio'
-    Member[4].role = 'Officer'
-    Member[4].code = '6870486802'
-    Member[4].tag = '@Sureñio'
-    Member[5].name = 'Raymond'
-    Member[5].role = 'Officer'
-    Member[5].code = '2381919750'
-    Member[5].tag = '@raymond1432'
-    
-def update_member():
-    value = 1
-    num = 6
-    rol = ''
-    ch = [' ']
-    bracket = False
-    global Member
-    Member = []
-    staff_update()
-    for i in range(len(text)):
-        if text[i] not in ch:
-            rol += text[i]
-            if value == 1 and text[i] != '-':
-                if text[i] == '@':
-                    Member.append(role())
-                    rol = rol.replace('-','')
-                    rol = rol.replace('@','')
-                    Member[num].name = rol.replace(' ','')
-                    value = 2
-                    rol = '@'
-            elif value == 2 and not bracket:
-                if text[i] == '-':
-                    rol = rol.replace('-','')
-                    Member[num].tag = rol.replace(' ','')
-                    value = 3
-                    rol = ''
-            elif value == 3:
-                if text[i] == chr(10) or i == len(text) - 1:
-                    Member[num].code = rol.replace(' ','')
-                    value = 1
-                    rol = ''
-                    num += 1
-new = ''
-for i in TOKEN:
-    new += chr(ord(i)-3)
-TOKEN = new
+        player = self.current.player
+        return not player.is_done()
 
-def return_member(num):
-    i = int(num)
-    msg = 'Name: ' + Member[i].name + chr(10) + 'Discord: ' + Member[i].tag + chr(10) + 'Role: ' + Member[i].role + chr(10) + 'Friend ID: ' + Member[i].code
-    return msg
+    @property
+    def player(self):
+        return self.current.player
 
-def return_officer():
-    off = ''
-    for i in Member:
-        if i.role == 'Officer':
-            off += 'Name: ' + i.name + chr(10)
-    return off
+    def skip(self):
+        self.skip_votes.clear()
+        if self.is_playing():
+            self.player.stop()
 
-@bot.event
-async def on_message(message):
+    def toggle_next(self):
+        self.bot.loop.call_soon_threadsafe(self.play_next_song.set)
 
-    lewd = ['hot', 'lewd']
-    
-    if message.author == bot.user:
-        return
+    async def audio_player_task(self):
+        while True:
+            self.play_next_song.clear()
+            self.current = await self.songs.get()
+            await self.bot.send_message(self.current.channel, 'Now playing ' + str(self.current))
+            self.current.player.start()
+            await self.play_next_song.wait()
 
-    if 'no u' in message.content:
-        msg = '{0.author.mention} no u'.format(message)
-        await bot.send_message(message.channel, msg)
-    elif message.content in lewd:
-        msg = '( ͡° ͜ʖ ͡°)'.format(message)
-        await bot.send_message(message.channel, msg)
-    elif message.content.startswith('?'):
-        if message.content[1:] == 'talk to yourself':
-            await bot.send_message(message.channel, "Haha, nice try. That's not going to happen again!".format(message))
-        else:
-            NAME = message.content[1:]
-            if NAME.lower() == 'guild master' or NAME.lower() == 'gm':
-                await bot.send_message(message.channel, return_member(0).format(message))
-            elif NAME.lower() == 'vice guild master' or NAME.lower() == 'vgm':
-                await bot.send_message(message.channel, return_member(1).format(message))
-            elif NAME.lower() == 'officer':
-                msg = 'Your officers are:' + chr(10) + return_officer().format(message)
-                await bot.send_message(message.channel, msg)
-            for i in range(len(Member)):
-                if Member[i].name.lower().startswith(NAME.lower()):
-                    await bot.send_message(message.channel, return_member(i).format(message))
-                    break
-                elif Member[i].tag.lower()[1:].startswith(NAME.lower()):
-                    await bot.send_message(message.channel, return_member(i).format(message))
+class Music:
+    """Voice related commands.
+    Works in multiple servers at once.
+    """
+    def __init__(self, bot):
+        self.bot = bot
+        self.voice_states = {}
+
+    def get_voice_state(self, server):
+        state = self.voice_states.get(server.id)
+        if state is None:
+            state = VoiceState(self.bot)
+            self.voice_states[server.id] = state
+
+        return state
+
+    async def create_voice_client(self, channel):
+        voice = await self.bot.join_voice_channel(channel)
+        state = self.get_voice_state(channel.server)
+        state.voice = voice
+
+    def __unload(self):
+        for state in self.voice_states.values():
+            try:
+                state.audio_player.cancel()
+                if state.voice:
+                    self.bot.loop.create_task(state.voice.disconnect())
+            except:
+                pass
+
+    @commands.command(pass_context=True)
+    async def onii(self, ctx, player):
+        summoned_channel = ctx.message.author.voice_channel
+        if summoned_channel is None:
+            await self.bot.say(ctx.message.author.mention + ' Onii-chan <3')
+            return False
+        state = self.get_voice_state(ctx.message.server)
+        if state.voice is None:
+            state.voice = await self.bot.join_voice_channel(summoned_channel)
         
-    await bot.process_commands(message)
-
-@bot.command(name = 'cheese',
-            description = 'Tells about a way to cheese a trial',
-            brief = 'What cheese do you want on a trail? iubb, normal attack',
-            pass_context = True)
-async def cheese(context, *, cheese_type):
-    normal_attack = ['normal attack',
-                     'savia',
-                     'normal',
-                     'na']
-    if cheese_type == "iubb":
-        await bot.say(context.message.author.mention + " UBB over and over again until they're are dead")
-    elif cheese_type in normal_attack:
-        await bot.say(context.message.author.mention + " More like Savia UBB + Hit count SBB + Atk based on Def conversion buff + Brute Potions")
-    else:
-        await bot.say(context.message.author.mention + " Never hear of it, maybe " + cheese_type + " makes good fondue")
-
-@bot.command(pass_context = True)
-async def Graid(context,*,tip):
-    if tip == 'tier':
-        await bot.say(context.message.author.mention + '''https://docs.google.com/spreadsheets/d/1oXacoQxFZut_JsOXVfYm6wNz6S7LXXgkrUk3U9DR7qU/edit?usp=sharing
-This is made by Haru and Shiro''')
- 
-@bot.command()
-async def goldstar():
-    await bot.say('https://media.discordapp.net/attachments/340409248926400526/448308906590994433/man_file_1042548_8a8.png')
-
-@bot.command()
-async def isopod():
-    await bot.say('https://cdn.discordapp.com/attachments/445751284214136834/449384585894297601/unknown.png')
-    
-@bot.command()
-async def update():
-    text_id = await bot.get_message(bot.get_channel('445751409732878337'), '447551398482018305')
-    global text
-    text = ''.join(c for c in text_id.content if c <= '\uFFFF')
-    update_member()
+        sound = state.voice.create_ffmpeg_player('Onii-Chan.mp3')
+        sound.start()
+        time.sleep(2)
+        await state.voice.disconnect()
+        state.voice = None
+        
+        
+bot = commands.Bot(BOX_PREFIX, description='A playlist example for discord.py')
+bot.add_cog(Music(bot))
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(game = Game(name = "with Gumi's code"))
-    text_id = await bot.get_message(bot.get_channel('445751409732878337'), '447551398482018305')
-    global text
-    text = ''.join(c for c in text_id.content if c <= '\uFFFF')
-    update_member()
+    await bot.change_presence(game = Game(name = "with Onii-Chan"))
+    print('Logged in as:\n{0} (ID: {0.id})'.format(bot.user))
 
-              
 bot.run(TOKEN)
