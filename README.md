@@ -1,3 +1,2 @@
-# guild_bot
-guild_bot
-for brave frontier
+# discord_bot
+Discord Bot
